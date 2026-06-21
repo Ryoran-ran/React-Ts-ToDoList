@@ -4,14 +4,21 @@ import './App.css'
 
 function App() {
   const [tasks, setTasks] = useState<string[]>([])
+  const [inputValue, setInputValue] = useState('')
+
+  const addTask = () => {
+    if (inputValue === '') return;
+    setTasks([...tasks, inputValue]);
+    setInputValue('');
+  }
 
   return (
     <>
-      <h1>ToDoリスト</h1>
+      <h2>ToDoリスト</h2>
       {/* 入力部 */}
       <div>
-        <input type="text" placeholder="タスクを入力してください" />
-        <button>追加</button>
+        <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="タスクを入力してください" />
+        <button onClick={addTask}>追加</button>
       </div>
 
       {/* タスク表示部 */}
