@@ -1,14 +1,15 @@
 import { useState } from 'react'
-
 import './App.css'
 
+import type { Task } from './type/tasks'
+
 function App() {
-  const [tasks, setTasks] = useState<string[]>([])
+  const [tasks, setTasks] = useState<Task[]>([])
   const [inputValue, setInputValue] = useState('')
 
   const addTask = () => {
     if (inputValue === '') return;
-    setTasks([...tasks, inputValue]);
+    setTasks([...tasks, { id: Date.now().toString(), text: inputValue, completed: false }]);
     setInputValue('');
   }
 
@@ -23,9 +24,9 @@ function App() {
 
       {/* タスク表示部 */}
       <ul>
-        {tasks.map((task, index) => (
-          <li key={index}>
-            {task} <button>完了</button>
+        {tasks.map((task) => (
+          <li key={task.id}>
+            {task.text} <button>完了</button>
           </li>
         ))}
       </ul>
