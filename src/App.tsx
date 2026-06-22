@@ -13,6 +13,10 @@ function App() {
     setInputValue('');
   }
 
+  const todoTask = (id: string) => {
+    setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
+  }
+
   return (
     <>
       <h2>ToDoリスト</h2>
@@ -26,7 +30,8 @@ function App() {
       <ul>
         {tasks.map((task) => (
           <li key={task.id}>
-            {task.text} <button>完了</button>
+            {task.completed ? <s>{task.text}</s> : task.text}
+            <button onClick={() => todoTask(task.id)}>{task.completed ? '未完了' : '完了'}</button>
           </li>
         ))}
       </ul>
