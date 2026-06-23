@@ -6,6 +6,7 @@ import type { Task } from './type/tasks'
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [inputValue, setInputValue] = useState('')
+  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
 
   const addTask = () => {
     if (inputValue === '') return;
@@ -32,12 +33,27 @@ function App() {
         <button onClick={addTask}>追加</button>
       </div>
 
+      {/* フィルタリング */}
+      <div>
+        <button onClick={() => setFilter('all')}>すべて</button>
+        <button onClick={() => setFilter('active')}>未完了</button>
+        <button onClick={() => setFilter('completed')}>完了</button>
+      </div>
+
       {/* タスク表示部 */}
       <ul>
-        {tasks.map((task) => (
+        {tasks
+        .filter((task) =>
+          filter === 'all' ||
+          (filter === 'active' && !task.completed) ||
+          (filter === 'completed' && task.completed)
+        )
+        .map((task) => (
           <li key={task.id}>
             {task.completed ? <s>{task.text}</s> : task.text}
-            <button onClick={() => todoTask(task.id)}>{task.completed ? '未完了' : '完了'}</button>
+            <button onClick={() => todoTask(task.id)}>
+              {task.completed ? '未完了' : '完了'}
+            </button>
             <button onClick={() => deleteTask(task.id)}>削除</button>
           </li>
         ))}
