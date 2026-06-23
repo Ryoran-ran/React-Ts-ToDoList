@@ -17,6 +17,12 @@ function App() {
     setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
   }
 
+  const deleteTask = (id: string) => {
+    if (window.confirm('本当に削除しますか？')) {
+      setTasks(tasks.filter(task => task.id !== id));
+    }
+  }
+
   return (
     <>
       <h2>ToDoリスト</h2>
@@ -32,6 +38,7 @@ function App() {
           <li key={task.id}>
             {task.completed ? <s>{task.text}</s> : task.text}
             <button onClick={() => todoTask(task.id)}>{task.completed ? '未完了' : '完了'}</button>
+            <button onClick={() => deleteTask(task.id)}>削除</button>
           </li>
         ))}
       </ul>
