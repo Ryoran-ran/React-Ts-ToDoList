@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState ,useEffect } from 'react'
 import './App.css'
-
+import { saveTasksToLocalStorage, loadTasksFromLocalStorage } from './hooks/localstrage'
 import type { Task } from './type/tasks'
 
 function App() {
@@ -8,20 +8,28 @@ function App() {
   const [inputValue, setInputValue] = useState('')
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
 
+  useEffect(() => {
+    setTasks(loadTasksFromLocalStorage());
+  }, []);
+
   const addTask = () => {
+    var newTask: Task = { id: Date.now().toString(), text: inputValue, completed: false };
     if (inputValue === '') return;
-    setTasks([...tasks, { id: Date.now().toString(), text: inputValue, completed: false }]);
+    setTasks([...tasks, newTask]);
     setInputValue('');
+    saveTasksToLocalStorage([...tasks, newTask]);
   }
 
   const todoTask = (id: string) => {
     setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
+    saveTasksToLocalStorage(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
   }
 
   const deleteTask = (id: string) => {
     if (window.confirm('本当に削除しますか？')) {
       setTasks(tasks.filter(task => task.id !== id));
     }
+    saveTasksToLocalStorage(tasks.filter(task => task.id !== id));
   }
 
   return (
