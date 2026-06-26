@@ -1,15 +1,20 @@
 import { useState ,useEffect } from 'react'
 import './App.css'
-import { saveTasksToLocalStorage, loadTasksFromLocalStorage } from './hooks/localstrage'
-import type { Task } from './type/tasks'
+import { saveTasksToLocalStorage
+  , loadTasksFromLocalStorage
+  , saveSettingToLocalStorage
+  , loadSettingFromLocalStorage
+} from './hooks/localstrage'
+import type { Task ,Setting} from './type/tasks'
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [inputValue, setInputValue] = useState('')
-  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const [filter, setFilter] = useState<Setting['filter']>('all')
 
   useEffect(() => {
     setTasks(loadTasksFromLocalStorage());
+    setFilter(loadSettingFromLocalStorage().filter);
   }, []);
 
   // タスク追加
@@ -19,6 +24,7 @@ function App() {
     setTasks([...tasks, newTask]);
     setInputValue('');
     saveTasksToLocalStorage([...tasks, newTask]);
+    
   }
 
   // タスク完了/未完了切り替え
@@ -47,9 +53,15 @@ function App() {
     saveTasksToLocalStorage(tasks.filter(task => task.id !== id));
   }
 
+  //フィルター設定
+  const handleFilterChange = (newFilter: Setting['filter']) => {
+    setFilter(newFilter);
+    saveSettingToLocalStorage({ filter: newFilter });
+  }
+
   return (
     <>
-      <h2>ToDoリスト</h2>
+      <h2>ToDoリスト 表示：{filter==='all' ? 'すべて' : filter==='active' ? '未完了' : '完了'}</h2>
       {/* 入力部 */}
       <div>
         <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="タスクを入力してください" />
@@ -64,9 +76,9 @@ function App() {
       </div>
       {/* フィルタリング */}
       <div>
-        <button onClick={() => setFilter('all')}>すべて</button>
-        <button onClick={() => setFilter('active')}>未完了</button>
-        <button onClick={() => setFilter('completed')}>完了</button>
+        <button onClick={() => handleFilterChange('all')}>すべて</button>
+        <button onClick={() => handleFilterChange('active')}>未完了</button>
+        <button onClick={() => handleFilterChange('completed')}>完了</button>
       </div>
 
       {/* タスク表示部 */}

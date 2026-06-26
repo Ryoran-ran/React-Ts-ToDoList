@@ -3,3 +3,7 @@ export type Task = {
   text: string
   completed: boolean
 };
+
+export type Setting = {
+    filter: 'all' | 'active' | 'completed'
+}
