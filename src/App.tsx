@@ -12,6 +12,7 @@ function App() {
     setTasks(loadTasksFromLocalStorage());
   }, []);
 
+  // タスク追加
   const addTask = () => {
     var newTask: Task = { id: Date.now().toString(), text: inputValue, completed: false };
     if (inputValue === '') return;
@@ -20,11 +21,13 @@ function App() {
     saveTasksToLocalStorage([...tasks, newTask]);
   }
 
+  // タスク完了/未完了切り替え
   const todoTask = (id: string) => {
     setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
     saveTasksToLocalStorage(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
   }
 
+  // タスク編集
   const editTask = (id: string) => {
     const taskToEdit = tasks.find(task => task.id === id);
     if (!taskToEdit) return;
@@ -36,6 +39,7 @@ function App() {
     saveTasksToLocalStorage(tasks.map(task => task.id === id ? { ...task, text: newText } : task));
   }
 
+  // タスク削除
   const deleteTask = (id: string) => {
     if (window.confirm('本当に削除しますか？')) {
       setTasks(tasks.filter(task => task.id !== id));
