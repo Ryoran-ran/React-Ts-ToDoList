@@ -56,6 +56,12 @@ function App() {
         <button onClick={addTask}>追加</button>
       </div>
 
+      {/* タスク数 */}
+      <div>
+        <p>タスク数: {tasks.length}</p>
+        <p>未完了タスク数: {tasks.filter(task => !task.completed).length}</p>
+        <p>完了タスク数: {tasks.filter(task => task.completed).length}</p>
+      </div>
       {/* フィルタリング */}
       <div>
         <button onClick={() => setFilter('all')}>すべて</button>
