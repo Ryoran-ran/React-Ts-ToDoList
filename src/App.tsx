@@ -25,6 +25,17 @@ function App() {
     saveTasksToLocalStorage(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
   }
 
+  const editTask = (id: string) => {
+    const taskToEdit = tasks.find(task => task.id === id);
+    if (!taskToEdit) return;
+
+    const newText = prompt('タスクを編集してください:', taskToEdit.text);
+    if (newText === null) return;
+
+    setTasks(tasks.map(task => task.id === id ? { ...task, text: newText } : task));
+    saveTasksToLocalStorage(tasks.map(task => task.id === id ? { ...task, text: newText } : task));
+  }
+
   const deleteTask = (id: string) => {
     if (window.confirm('本当に削除しますか？')) {
       setTasks(tasks.filter(task => task.id !== id));
@@ -62,6 +73,7 @@ function App() {
             <button onClick={() => todoTask(task.id)}>
               {task.completed ? '未完了' : '完了'}
             </button>
+            <button onClick={() => editTask(task.id)}>編集</button>
             <button onClick={() => deleteTask(task.id)}>削除</button>
           </li>
         ))}
