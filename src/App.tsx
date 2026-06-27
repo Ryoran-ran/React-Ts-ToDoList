@@ -10,11 +10,11 @@ import type { Task ,Setting} from './type/tasks'
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [inputValue, setInputValue] = useState('')
-  const [filter, setFilter] = useState<Setting['filter']>('all')
+  const [setting, setSetting] = useState<Setting>({ filter: 'all' });
 
   useEffect(() => {
     setTasks(loadTasksFromLocalStorage());
-    setFilter(loadSettingFromLocalStorage().filter);
+    setSetting(loadSettingFromLocalStorage());
   }, []);
 
   // タスク追加
@@ -55,13 +55,13 @@ function App() {
 
   //フィルター設定
   const handleFilterChange = (newFilter: Setting['filter']) => {
-    setFilter(newFilter);
+    setSetting({ ...setting, filter: newFilter });
     saveSettingToLocalStorage({ filter: newFilter });
   }
 
   return (
     <>
-      <h2>ToDoリスト 表示：{filter==='all' ? 'すべて' : filter==='active' ? '未完了' : '完了'}</h2>
+      <h2>ToDoリスト 表示：{setting.filter==='all' ? 'すべて' : setting.filter==='active' ? '未完了' : '完了'}</h2>
       {/* 入力部 */}
       <div>
         <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="タスクを入力してください" />
@@ -85,9 +85,9 @@ function App() {
       <ul>
         {tasks
         .filter((task) =>
-          filter === 'all' ||
-          (filter === 'active' && !task.completed) ||
-          (filter === 'completed' && task.completed)
+          setting.filter === 'all' ||
+          (setting.filter === 'active' && !task.completed) ||
+          (setting.filter === 'completed' && task.completed)
         )
         .map((task) => (
           <li key={task.id}>
