@@ -6,6 +6,7 @@ import { saveTasksToLocalStorage
   , loadSettingFromLocalStorage
 } from './hooks/localstrage'
 import type { Task ,Setting} from './type/tasks'
+import './style/style.css'
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -64,25 +65,27 @@ function App() {
       <h2>ToDoリスト 表示：{setting.filter==='all' ? 'すべて' : setting.filter==='active' ? '未完了' : '完了'}</h2>
       {/* 入力部 */}
       <div>
-        <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="タスクを入力してください" />
-        <button onClick={addTask}>追加</button>
+        <input type="text" value={inputValue} className="inputTask" onChange={(e) => setInputValue(e.target.value)} placeholder="タスクを入力してください" />
+        <button className="inputButton" onClick={addTask}>追加</button>
       </div>
 
       {/* タスク数 */}
-      <div>
-        <p>タスク数: {tasks.length}</p>
-        <p>未完了タスク数: {tasks.filter(task => !task.completed).length}</p>
-        <p>完了タスク数: {tasks.filter(task => task.completed).length}</p>
+      <div className="taskCount">
+        <p>タスク: {tasks.length}</p>
+        <p>未完了: {tasks.filter(task => !task.completed).length}</p>
+        <p>完了: {tasks.filter(task => task.completed).length}</p>
       </div>
       {/* フィルタリング */}
       <div>
-        <button onClick={() => handleFilterChange('all')}>すべて</button>
-        <button onClick={() => handleFilterChange('active')}>未完了</button>
-        <button onClick={() => handleFilterChange('completed')}>完了</button>
+        <button className="settingButton" onClick={() => handleFilterChange('all')}>すべて</button>
+        <button className="settingButton" onClick={() => handleFilterChange('active')}>未完了</button>
+        <button className="settingButton" onClick={() => handleFilterChange('completed')}>完了</button>
       </div>
 
+      <hr />
+
       {/* タスク表示部 */}
-      <ul>
+      <ul className="taskList">
         {tasks
         .filter((task) =>
           setting.filter === 'all' ||
@@ -91,12 +94,19 @@ function App() {
         )
         .map((task) => (
           <li key={task.id}>
-            {task.completed ? <s>{task.text}</s> : task.text}
-            <button onClick={() => todoTask(task.id)}>
-              {task.completed ? '未完了' : '完了'}
-            </button>
-            <button onClick={() => editTask(task.id)}>編集</button>
-            <button onClick={() => deleteTask(task.id)}>削除</button>
+            <div className="taskRow">
+              <div className="taskText">
+                {task.completed ? <s>{task.text}</s> : task.text}
+              </div>
+
+              <div className="taskButtons">
+                <button onClick={() => todoTask(task.id)}>
+                  {task.completed ? '未完了' : '完了'}
+                </button>
+                <button onClick={() => editTask(task.id)}>編集</button>
+                <button onClick={() => deleteTask(task.id)}>削除</button>
+              </div>
+            </div>
           </li>
         ))}
       </ul>
