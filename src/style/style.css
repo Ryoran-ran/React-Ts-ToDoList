@@ -68,3 +68,11 @@
 .taskButtons button {
   width: 72px;
 }
+
+.taskRowEven {
+  background-color: #f0f0f0;
+}
+
+.taskList li:nth-child(even) {
+  background-color: #f0f0f0;
+}

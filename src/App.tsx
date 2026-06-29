@@ -92,8 +92,10 @@ function App() {
           (setting.filter === 'active' && !task.completed) ||
           (setting.filter === 'completed' && task.completed)
         )
-        .map((task) => (
-          <li key={task.id}>
+        .map((task ,index) => (
+          <li 
+            key={task.id} 
+          >
             <div className="taskRow">
               <div className="taskText">
                 {task.completed ? <s>{task.text}</s> : task.text}
