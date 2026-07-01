@@ -48,10 +48,11 @@ function App() {
 
   // タスク削除
   const deleteTask = (id: string) => {
-    if (window.confirm('本当に削除しますか？')) {
-      setTasks(tasks.filter(task => task.id !== id));
-    }
-    saveTasksToLocalStorage(tasks.filter(task => task.id !== id));
+    if (!window.confirm('本当に削除しますか？')) return;
+
+    const updatedTasks = tasks.filter(task => task.id !== id);
+    setTasks(updatedTasks);
+    saveTasksToLocalStorage(updatedTasks);
   }
 
   //フィルター設定
