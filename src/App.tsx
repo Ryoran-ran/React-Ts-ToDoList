@@ -1,120 +1,118 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useState ,useEffect } from 'react'
 import './App.css'
+import { saveTasksToLocalStorage
+  , loadTasksFromLocalStorage
+  , saveSettingToLocalStorage
+  , loadSettingFromLocalStorage
+} from './hooks/localstrage'
+import type { Task ,Setting} from './type/tasks'
+import './style/style.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [inputValue, setInputValue] = useState('')
+  const [setting, setSetting] = useState<Setting>({ filter: 'all' });
+
+  useEffect(() => {
+    setTasks(loadTasksFromLocalStorage());
+    setSetting(loadSettingFromLocalStorage());
+  }, []);
+
+  // タスク追加
+  const addTask = () => {
+    var newTask: Task = { id: Date.now().toString(), text: inputValue, completed: false };
+    if (inputValue === '') return;
+    setTasks([...tasks, newTask]);
+    setInputValue('');
+    saveTasksToLocalStorage([...tasks, newTask]);
+    
+  }
+
+  // タスク完了/未完了切り替え
+  const todoTask = (id: string) => {
+    setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
+    saveTasksToLocalStorage(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
+  }
+
+  // タスク編集
+  const editTask = (id: string) => {
+    const taskToEdit = tasks.find(task => task.id === id);
+    if (!taskToEdit) return;
+
+    const newText = prompt('タスクを編集してください:', taskToEdit.text);
+    if (newText === null) return;
+
+    setTasks(tasks.map(task => task.id === id ? { ...task, text: newText } : task));
+    saveTasksToLocalStorage(tasks.map(task => task.id === id ? { ...task, text: newText } : task));
+  }
+
+  // タスク削除
+  const deleteTask = (id: string) => {
+    if (!window.confirm('本当に削除しますか？')) return;
+
+    const updatedTasks = tasks.filter(task => task.id !== id);
+    setTasks(updatedTasks);
+    saveTasksToLocalStorage(updatedTasks);
+  }
+
+  //フィルター設定
+  const handleFilterChange = (newFilter: Setting['filter']) => {
+    setSetting({ ...setting, filter: newFilter });
+    saveSettingToLocalStorage({ filter: newFilter });
+  }
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      <h2>ToDoリスト 表示：{setting.filter==='all' ? 'すべて' : setting.filter==='active' ? '未完了' : '完了'}</h2>
+      {/* 入力部 */}
+      <div>
+        <input type="text" value={inputValue} className="inputTask" onChange={(e) => setInputValue(e.target.value)} placeholder="タスクを入力してください" />
+        <button className="inputButton" onClick={addTask}>追加</button>
+      </div>
 
-      <div className="ticks"></div>
+      {/* タスク数 */}
+      <div className="taskCount">
+        <p>タスク: {tasks.length}</p>
+        <p>未完了: {tasks.filter(task => !task.completed).length}</p>
+        <p>完了: {tasks.filter(task => task.completed).length}</p>
+      </div>
+      {/* フィルタリング */}
+      <div>
+        <button className="settingButton" onClick={() => handleFilterChange('all')}>すべて</button>
+        <button className="settingButton" onClick={() => handleFilterChange('active')}>未完了</button>
+        <button className="settingButton" onClick={() => handleFilterChange('completed')}>完了</button>
+      </div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <hr />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      {/* タスク表示部 */}
+      <ul className="taskList">
+        {tasks
+        .filter((task) =>
+          setting.filter === 'all' ||
+          (setting.filter === 'active' && !task.completed) ||
+          (setting.filter === 'completed' && task.completed)
+        )
+        .map((task ,index) => (
+          <li 
+            key={task.id} 
+          >
+            <div className="taskRow">
+              <div className="taskText">
+                {task.completed ? <s>{task.text}</s> : task.text}
+              </div>
+
+              <div className="taskButtons">
+                <button onClick={() => todoTask(task.id)}>
+                  {task.completed ? '未完了' : '完了'}
+                </button>
+                <button onClick={() => editTask(task.id)}>編集</button>
+                <button onClick={() => deleteTask(task.id)}>削除</button>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
     </>
   )
 }

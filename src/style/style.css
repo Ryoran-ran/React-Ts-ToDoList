@@ -1,0 +1,78 @@
+.inputTask{
+    font-size: 26px;
+    width: 50%;
+}
+
+.inputButton{
+    font-size: 20px;
+}
+
+.taskCount {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  text-align: left;
+  z-index: 10;
+}
+
+.settingButton{
+    font-size: 20px;
+    margin: 0 5px;
+}
+
+.taskList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.taskRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.taskText {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.taskButtons {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.taskRow {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) 240px;
+  align-items: center;
+  gap: 16px;
+  width: min(100%, 700px);
+  margin: 0 auto;
+}
+
+.taskText {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.taskButtons {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 8px;
+}
+
+.taskButtons button {
+  width: 72px;
+}
+
+.taskRowEven {
+  background-color: #f0f0f0;
+}
+
+.taskList li:nth-child(even) {
+  background-color: #f0f0f0;
+}
