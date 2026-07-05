@@ -93,7 +93,7 @@ function App() {
           (setting.filter === 'active' && !task.completed) ||
           (setting.filter === 'completed' && task.completed)
         )
-        .map((task ,index) => (
+        .map((task) => (
           <li 
             key={task.id} 
           >
