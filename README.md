@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# ToDo List
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ReactとTypeScriptで作成した、ブラウザ上で利用できるToDoリストです。
+タスクと表示設定は`localStorage`に保存されるため、ページを再読み込みしても状態が保持されます。
 
-Currently, two official plugins are available:
+## 主な機能
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- タスクの追加
+- タスク内容の編集
+- タスクの削除
+- 完了・未完了状態の切り替え
+- すべて・未完了・完了による絞り込み
+- タスク総数・未完了数・完了数の表示
+- タスクと表示設定のローカル保存
 
-## React Compiler
+## 使用技術
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- TypeScript
+- Vite
+- CSS
+- Web Storage API（`localStorage`）
 
-## Expanding the ESLint configuration
+## セットアップ
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 必要な環境
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js
+- npm
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### インストールと起動
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+起動後、ターミナルに表示されたURLをブラウザで開いてください。
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## コマンド
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# 開発サーバーを起動
+npm run dev
+
+# 本番用にビルド
+npm run build
+
+# ESLintを実行
+npm run lint
+
+# ビルド結果をローカルで確認
+npm run preview
 ```
+
+## ディレクトリ構成
+
+```text
+src/
+├── hooks/
+│   └── localstrage.ts  # localStorageの保存・読み込み処理
+├── style/
+│   └── style.css       # ToDoリスト固有のスタイル
+├── type/
+│   └── tasks.ts        # タスクと設定の型定義
+├── App.tsx             # 画面表示とToDo操作
+└── index.css           # アプリ全体の共通スタイル
+```
+
+## 今後の改善案
+
+- コンポーネントとロジックの分割
+- 入力値の検証強化
+- 自動テストの追加
+- レスポンシブ表示の改善
+
+## ライセンス
+
+このプロジェクトのライセンスは未設定です。
